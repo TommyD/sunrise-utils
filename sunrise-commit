@@ -12,8 +12,8 @@ LIGHTBLUE=$HILITE
 RED=$BAD
 YELLOW=$WARN
 
-commit_category="$(pwd | awk -F/ '{ print $(NF-1) }')"
-commit_package="$(pwd | awk -F/ '{ print $NF }')"
+commit_path=
+
 current_git_status=( )
 cwd_is_ebuild_dir=0
 items_added=( )
@@ -94,6 +94,22 @@ get_current_git_status() {
 		column_1=${line:0:1}
 		column_2=${line:1:1}
 		item=${line:3}
+
+		# Use the first item in the commit message
+		if [[ -z $commit_path ]]; then
+			case "$item" in
+				*-*/*/*/*)
+					# cat/pkg/files/*
+					commit_path=${item%/*/*} ;;
+				*-*/*/*)
+					# cat/pkg/*
+					commit_path=${item%/*} ;;
+				*)
+					# Not a package; use full path
+					commit_path=$item ;;
+			esac
+		fi
+
 		case $column_1 in
 			A)   items_added+=( "$item" ) ;;
 			D)   items_deleted+=( "$item" ) ;;
@@ -175,11 +191,7 @@ git_commit() {
 	fi
 
 	if [[ $opt_noformat == 0 ]] ; then
-		if [[ $cwd_is_ebuild_dir == 1 ]] ; then
-			commit_message="${commit_category}/${commit_package}: ${commit_message}"
-		else
-			commit_message="${commit_package}: ${commit_message}"
-		fi
+		commit_message="${commit_path}: ${commit_message}"
 	fi
 
 	echo
