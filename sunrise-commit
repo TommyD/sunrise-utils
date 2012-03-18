@@ -154,11 +154,7 @@ git_add() {
 	fi
 
 	if [[ ${#items2_deleted[*]} > 0 ]] ; then
-		if [[ $opt_verbose == 1 ]] ; then
-			git rm -v -- "${items2_deleted[@]}" || set $?
-		else
-			git rm -- "${items2_deleted[@]}" || set $?
-		fi
+		git rm -- "${items2_deleted[@]}" || set $?
 	fi
 	eend ${1:-0}
 
@@ -182,7 +178,7 @@ git_commit() {
 		if [[ $cwd_is_ebuild_dir == 1 ]] ; then
 			commit_message="${commit_category}/${commit_package}: ${commit_message}"
 		else
-			commit_message="${commit_package}/${current_git_status[0]:7}: ${commit_message}"
+			commit_message="${commit_package}: ${commit_message}"
 		fi
 	fi
 
