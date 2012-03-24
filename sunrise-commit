@@ -99,7 +99,7 @@ get_current_git_status() {
 		if [[ -z $commit_path ]]; then
 			case "$item" in
 				*-*/*/*)
-					commit_path=$(awk -F/ '{ print $1 "/" $2 }' <<<"$item") 
+					commit_path=$(awk -F/ '{ print $1 "/" $2 }' <<<"$item") ;;
 				*)
 					# Not a package; use full path
 					commit_path=$item ;;
