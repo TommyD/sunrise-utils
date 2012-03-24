@@ -143,7 +143,11 @@ git_add() {
 
 	while ! [[ -e .git ]] ; do
 		(( num_unversioned_dirs++ ))
-		pushd .. >/dev/null
+		pushd .. >/dev/null 2>&1
+		if [[ $? == 1 ]] ; then
+			(( num_unversioned_dirs-- ))
+			cd .. 2>/dev/null
+		fi
 	done
 
 	get_current_git_status
