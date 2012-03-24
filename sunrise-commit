@@ -98,12 +98,8 @@ get_current_git_status() {
 		# Use the first item in the commit message
 		if [[ -z $commit_path ]]; then
 			case "$item" in
-				*-*/*/*/*)
-					# cat/pkg/files/*
-					commit_path=${item%/*/*} ;;
 				*-*/*/*)
-					# cat/pkg/*
-					commit_path=${item%/*} ;;
+					commit_path=$(awk -F/ '{ print $1 "/" $2 }' <<<"$item") 
 				*)
 					# Not a package; use full path
 					commit_path=$item ;;
