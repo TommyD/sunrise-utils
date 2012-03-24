@@ -142,7 +142,8 @@ git_add() {
 	local num_unversioned_dirs=0
 
 	while ! [[ -e .git ]] ; do
-		cd .. 2>/dev/null
+		(( num_unversioned_dirs++ ))
+		pushd .. >/dev/null
 	done
 
 	get_current_git_status
@@ -170,7 +171,7 @@ git_add() {
 	eend ${1:-0}
 
 	for (( i=num_unversioned_dirs ; i > 0 ; i-- )) ; do
-		popd >/dev/null 2>&1
+		popd >/dev/null
 	done
 
 	return ${1:-0}
