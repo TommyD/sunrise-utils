@@ -140,8 +140,10 @@ fi
 
 ebegin "Pushing changes..."
 if [[ "$opt_verbose" == "1" ]] ; then
+	git push -v origin
 	git push -v reviewed
 else
+	git push origin
 	git push reviewed
 fi
 eend ${?}
